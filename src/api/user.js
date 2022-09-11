@@ -26,3 +26,12 @@ export const getSendCodeApi = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+/**
+ * 获取用户信息
+ * @returns params
+ */
+export const getUserInfo = () => {
+  return request({
+    url: '/v1_0/user/'
+  })
+}
