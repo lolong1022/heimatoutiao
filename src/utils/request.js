@@ -10,7 +10,7 @@ const request = axios.create({
 })
 // 请求拦截添加headers
 request.interceptors.request.use(function (config) {
-  console.log(config)
+  // console.log(config)
   const {
     getters: { isLogin },
     state: { tokenObj }
