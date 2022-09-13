@@ -7,27 +7,40 @@
     </van-nav-bar>
     <!-- 导航栏切换 -->
     <van-tabs v-model="active" swipeable>
-      <van-tab v-for="item in channelList" :key="item.id" :title="item.name"
-        >
+      <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <AriticleList :id="item.id"></AriticleList>
-        </van-tab
-      >
-      <span class="toutiao toutiao-gengduo"></span>
+      </van-tab>
+      <span class="toutiao toutiao-gengduo" @click="isShow = true"></span>
     </van-tabs>
+    <van-popup
+      v-model="isShow"
+      position="bottom"
+      closeable
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <ChannelEdit
+        :myChannels="channelList"
+        @changeActive=";[(active = $event), (isShow = false)]"
+      ></ChannelEdit>
+    </van-popup>
   </div>
 </template>
 
 <script>
+import ChannelEdit from './components/ChannelEdit.vue'
 import { getChannelslApi } from '@/api'
 import AriticleList from './components/AriticleList'
 export default {
   components: {
-    AriticleList
+    AriticleList,
+    ChannelEdit
   },
   data() {
     return {
       active: 0,
-      channelList: []
+      channelList: [],
+      isShow: false
     }
   },
   created() {
