@@ -32,6 +32,7 @@
           v-for="item in recommendP"
           :key="item.id"
           :text="item.name"
+          @click="$emit('addChannel', item)"
         >
           <template #icon> <van-icon name="plus" v-if="isShowEdit" /> </template
         ></van-grid-item>
@@ -61,9 +62,9 @@ export default {
       console.log(data)
       this.recommendpannel = data.data.channels
     },
-    handerMyChannel({ name }, index) {
+    handerMyChannel({ name, id }, index) {
       if (this.isShowEdit && name !== '推荐') {
-        console.log('shanchu' + name)
+        this.$emit('delChannel', id)
       } else {
         this.$emit('changeActive', index)
       }

@@ -20,8 +20,11 @@
       :style="{ height: '100%' }"
     >
       <ChannelEdit
+        v-if="isShow"
         :myChannels="channelList"
         @changeActive=";[(active = $event), (isShow = false)]"
+        @delChannel="delChannel"
+        @addChannel="addChannel"
       ></ChannelEdit>
     </van-popup>
   </div>
@@ -29,7 +32,8 @@
 
 <script>
 import ChannelEdit from './components/ChannelEdit.vue'
-import { getChannelslApi } from '@/api'
+import { mapGetters, mapMutations } from 'vuex'
+import { getChannelslApi, delChannelAPI, addChannelAPI } from '@/api'
 import AriticleList from './components/AriticleList'
 export default {
   components: {
@@ -44,11 +48,65 @@ export default {
     }
   },
   created() {
-    this.getPannel()
+    this.initChannels()
   },
   // ??  ==> ||  相当于
   // ?. ==> 可选式操作符 ？. 判断前面是undifinded ,则不会往后执行
+  computed: {
+    ...mapGetters(['isLogin'])
+  },
   methods: {
+    initChannels() {
+      const myChannelsVuex = this.$store.state.myChannels
+      if (this.isLogin) {
+        this.getPannel()
+      } else {
+        myChannelsVuex.length
+          ? (this.channelList = myChannelsVuex)
+          : this.getPannel()
+      }
+    },
+    ...mapMutations(['SET_MY_CHANNELS']),
+    async delChannel(id) {
+      // 删除之后的视图对用的数组
+      const newChannel = this.channelList.filter((item) => item.id !== id)
+      try {
+        // 删除之前先判断一下是否登录
+        if (this.isLogin) {
+          await delChannelAPI(id)
+        } else {
+          this.SET_MY_CHANNELS(newChannel)
+        }
+
+        this.channelList = newChannel
+        this.$toast.success('删除成功')
+      } catch (error) {
+        if (error.response?.status === 401) {
+          this.$toast.fail('请登录在删除')
+        } else {
+          throw error
+        }
+      }
+    },
+    async addChannel(item) {
+      try {
+        // 添加之前先判断一下是否登录
+        if (this.isLogin) {
+          // 1.调用添加接口
+          await addChannelAPI(item.id, this.channelList.length)
+        } else {
+          this.SET_MY_CHANNELS([...this.channelList, item])
+        }
+        this.channelList.push(item)
+        this.$toast.success('添加频道成功')
+      } catch (error) {
+        if (error.response?.status === 401) {
+          this.$toast.fail('请登录在删除')
+        } else {
+          throw error
+        }
+      }
+    },
     async getPannel() {
       try {
         const { data } = await getChannelslApi()
