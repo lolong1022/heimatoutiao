@@ -3,7 +3,9 @@
     <!-- {{ conust }}
     <h2>cunust的10倍值{{ bigNum }}</h2>
     <button @click="SET_CONUST(1)">点击conust++</button> -->
-    <router-view></router-view>
+    <transition name="van-slide-left" mode="out-in">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -12,12 +14,12 @@
 // console.log(mapState(['conust']))
 // // 3.配置rem动起来
 export default {
-//   methods: {
-//     ...mapMutations(['SET_CONUST'])
-//   },
-//   computed: {
-//     ...mapState(['conust']),
-//     ...mapGetters(['bigNum'])
+  //   methods: {
+  //     ...mapMutations(['SET_CONUST'])
+  //   },
+  //   computed: {
+  //     ...mapState(['conust']),
+  //     ...mapGetters(['bigNum'])
   // }
 }
 </script>

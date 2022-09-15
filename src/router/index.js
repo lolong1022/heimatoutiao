@@ -35,6 +35,10 @@ const routes = [
     // 配置 Login
     path: '/login', // 路由懒加载设置
     component: () => import('@/views/Login')
+  },
+  {
+    path: '/search',
+    component: () => import(/* WebpackChunkName:'Search' */ '@/views/Search')
   }
 ]
 
